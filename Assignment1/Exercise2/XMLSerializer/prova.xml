@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmlserializer.Student>
+	<firstName type="String">Marco</firstName>
+	<surname type="String">Polo</surname>
+	<age type="int">23</age>
+</xmlserializer.Student>

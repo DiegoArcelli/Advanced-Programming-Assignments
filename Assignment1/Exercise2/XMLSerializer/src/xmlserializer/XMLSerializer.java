@@ -4,10 +4,12 @@
  */
 package xmlserializer;
 
-import java.lang.reflect.Constructor;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -15,53 +17,66 @@ import java.lang.reflect.Parameter;
  */
 public class XMLSerializer {
     
-    private Object objects[];
     
     public XMLSerializer() {
-        this.objects = null;
+        
     }
     
-    public XMLSerializer(Object objects[]) {
-        this.objects = objects;
-    }
-    
-    public void serialize(Object objects[]) {
-        for (Object obj : objects) {
+    public static void serialize(Object arr[], String fileName) {
+        
+        String xml_file_text = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+        
+        for (Object obj : arr) {
             Class obj_class = obj.getClass();
             
-            Method[] methods = obj_class.getMethods();
-            for (Method method : methods) {
-                String return_type = method.getReturnType().getName();
-                String method_name = method.getName();
+            if (obj_class.isAnnotationPresent(XMLable.class)) {
                 
-                Parameter[] parameters = method.getParameters();
-                for (Parameter parameter : parameters) {
-                    String param_type = parameter.getType().getName();
-                    String param_name = parameter.getName();
+                String class_name = obj_class.getName();
+                
+                xml_file_text += "<" + class_name + ">\n";
+                
+                Field[] fields = obj_class.getDeclaredFields();
+                for (Field field : fields) {
                     
+                    if (field.isAnnotationPresent(XMLfield.class)) {
+                        
+                        String type, name, value = null;
+                        
+                        field.setAccessible(true);
+                        
+                        try {
+                            value = field.get(obj).toString();
+                        } catch (IllegalArgumentException ex) {
+                            Logger.getLogger(XMLSerializer.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (IllegalAccessException ex) {
+                            Logger.getLogger(XMLSerializer.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        
+                        XMLfield field_annotation = (XMLfield)field.getDeclaredAnnotation(XMLfield.class);
+                        type = field_annotation.type();
+                        name = field_annotation.name().equals("[undefined]") ? field.getName() : field_annotation.name();
+                        
+                        xml_file_text += "\t<" + name + " type=\"" + type + "\">" + value  + "</" + name + ">\n";
+
+                    }
                 }
                 
+                xml_file_text += "</" + class_name + ">\n";
+                
+            } else {
+                xml_file_text += "<notXMLable/>\n";
             }
-            
-            Field[] fields = obj_class.getFields();
-            for (Field field : fields) {
-                String field_type = field.getType().getName();
-                String field_name = field.getName();
-            }
-            
-            Constructor[] constructors = obj_class.getConstructors();
-            for (Constructor constructor : constructors) {
-                String constructor_name = constructor.getName();
-                Parameter[] parameters = constructor.getParameters();
-                for (Parameter parameter : parameters) {
-                    String param_type = parameter.getType().getName();
-                    String param_name = parameter.getName();
-                }
-            }
-            
-            
-            
         }
+        
+        try {
+            FileWriter writer = new FileWriter(fileName + ".xml");
+            writer.write(xml_file_text);
+            writer.close();
+        } catch (IOException ex) {
+            Logger.getLogger(XMLSerializer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        
     }
     
     
