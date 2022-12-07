@@ -6,6 +6,10 @@ package eightpuzzle;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -66,7 +70,21 @@ public class EightBoard extends javax.swing.JFrame {
         this.tile9.addPropertyChangeListenerz(tile6);
         this.tile9.addPropertyChangeListenerz(tile8);
         
-        int[] initConf = {8,9,6,5,4,7,2,3,1};
+        
+        this.restart.addRestartListener(controller);
+        this.restart.addRestartListener(tile1);
+        this.restart.addRestartListener(tile2);
+        this.restart.addRestartListener(tile3);
+        this.restart.addRestartListener(tile4);
+        this.restart.addRestartListener(tile5);
+        this.restart.addRestartListener(tile6);
+        this.restart.addRestartListener(tile7);
+        this.restart.addRestartListener(tile8);
+        this.restart.addRestartListener(tile9);
+        
+        
+        List<Integer> initConf = Arrays.asList(8,9,6,5,4,7,2,3,1);
+        //Collections.shuffle(initConf);
         controller.setConfiguration(initConf);
 
     }
@@ -146,6 +164,18 @@ public class EightBoard extends javax.swing.JFrame {
         tile9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tile9ActionPerformed(evt);
+            }
+        });
+
+        flip.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                flipActionPerformed(evt);
+            }
+        });
+
+        restart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                restartActionPerformed(evt);
             }
         });
 
@@ -249,6 +279,16 @@ public class EightBoard extends javax.swing.JFrame {
     private void tile9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tile9ActionPerformed
         tile9.setLabel(9);
     }//GEN-LAST:event_tile9ActionPerformed
+
+    private void flipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_flipActionPerformed
+        // TODO add your handling code here:+
+        
+    }//GEN-LAST:event_flipActionPerformed
+
+    private void restartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restartActionPerformed
+        // TODO add your handling code here:
+        this.restart.permute();
+    }//GEN-LAST:event_restartActionPerformed
 
     /**
      * @param args the command line arguments

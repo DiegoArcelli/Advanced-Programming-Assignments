@@ -15,12 +15,13 @@ import java.beans.VetoableChangeListener;
 import javax.swing.JButton;
 import java.beans.VetoableChangeSupport;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  *
  * @author diego
  */
-public class EightTile extends JButton implements Serializable, PropertyChangeListener {
+public class EightTile extends JButton implements Serializable, PropertyChangeListener, RestartListener {
     
     private final int position;
     private int label;
@@ -104,6 +105,15 @@ public class EightTile extends JButton implements Serializable, PropertyChangeLi
             setColor();
             //this.setLabel(oldValue);
         }
+    }
+
+    @Override
+    public void onRestartListener(RestartEvent evt) {
+        List<Integer> perm = evt.permutation;
+        int newLabel = perm.get(position-1);
+        this.label = newLabel;
+        setColor();
+        
     }
     
     

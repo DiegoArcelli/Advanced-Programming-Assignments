@@ -172,8 +172,14 @@
     <Component class="eightpuzzle.EightController" name="controller">
     </Component>
     <Component class="eightpuzzle.Flip" name="flip">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="flipActionPerformed"/>
+      </Events>
     </Component>
     <Component class="eightpuzzle.Restart" name="restart">
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="restartActionPerformed"/>
+      </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new eightpuzzle.Restart()"/>
       </AuxValues>

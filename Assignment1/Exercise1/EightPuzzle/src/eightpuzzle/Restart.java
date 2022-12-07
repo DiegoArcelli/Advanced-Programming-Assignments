@@ -16,16 +16,21 @@ import javax.swing.SwingConstants;
  */
 public class Restart extends JButton implements Serializable {
     
+    private RestartEvent event;
+    
     public Restart() {
         this.setText("RESTART");
+        this.event = new RestartEvent();
         this.setHorizontalAlignment(SwingConstants.CENTER);
     }
     
-    private int[] generatePermuatation() {
-        
-        return null;
+    public void addRestartListener(RestartListener l) {
+        this.event.addRestartListener(l);
     }
     
+    public void permute() {
+        this.event.update();
+    }
     
 }
 

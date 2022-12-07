@@ -11,37 +11,32 @@ import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 import javax.swing.JLabel;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
  * @author diego
  */
-public class EightController extends JLabel implements VetoableChangeListener {
+public class EightController extends JLabel implements VetoableChangeListener, RestartListener {
     
-    private int[] configuration;
+    private List<Integer> configuration;
 
     public EightController() {
+        this.configuration = Arrays.asList(1,2,3,4,5,6,7,8,9);
         this.setText("START");
         this.setHorizontalAlignment(JLabel.CENTER);
     }
     
-    public void setConfiguration(int[] configuration) {
-        this.configuration = configuration.clone();
-    }
-
-        
-    private int[] getCoordinates(int pos) {
-        int row = pos/3;
-        int col = pos % 3;
-        int[] pair = {row, col}; 
-        return pair;
+    public void setConfiguration(List<Integer> configuration) {
+        Collections.copy(this.configuration, configuration);
     }
     
     private int getPosition(int value) {
         
         int pos = 0; 
         for (int i = 0; i < 9; i++) {
-            if (this.configuration[i] == value) {
+            if (this.configuration.get(i) == value) {
                 pos = i;
                 break;
             }
@@ -49,12 +44,6 @@ public class EightController extends JLabel implements VetoableChangeListener {
         
         return pos;
 
-    }
-    
-    private boolean checkAdmissibility(int[] currPos, int[] holePos) {
-        
-        return true;
-        
     }
     
     
@@ -70,16 +59,26 @@ public class EightController extends JLabel implements VetoableChangeListener {
         }*/
         
         int currPos = this.getPosition(oldValue);
-        int holePos = this.getPosition(9);        
+        int holePos = this.getPosition(newValue);
+
+        System.out.println(this.configuration);
         
         if ((holePos != currPos - 3) && (holePos != currPos + 3) && (holePos != currPos - 1) && (holePos != currPos + 1)) {
+            setText("KO");
             throw new PropertyVetoException("The operation is not admissible", evt);
         }
         
-        this.configuration[currPos] = 9;
-        this.configuration[holePos] = oldValue;
+        this.setText("OK");
+        this.configuration.set(currPos, newValue);
+        this.configuration.set(holePos, oldValue);
         
 
+    }
+
+    @Override
+    public void onRestartListener(RestartEvent evt) {
+        List<Integer> permutation = evt.permutation;
+        this.setConfiguration(permutation);
     }
     
     
