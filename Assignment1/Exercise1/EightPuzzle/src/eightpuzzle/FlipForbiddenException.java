@@ -8,8 +8,10 @@ package eightpuzzle;
  *
  * @author diego
  */
-public interface RestartListener {
+public class FlipForbiddenException extends Exception {
     
-    public void onRestart(RestartEvent evt);
+    public FlipForbiddenException(String errorMessage) {
+        super(errorMessage);
+    }
     
 }

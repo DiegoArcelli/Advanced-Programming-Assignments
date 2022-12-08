@@ -82,9 +82,10 @@ public class EightBoard extends javax.swing.JFrame {
         this.restart.addRestartListener(tile8);
         this.restart.addRestartListener(tile9);
         
+        this.flip.addFlipListener(controller);
+        
         
         List<Integer> initConf = Arrays.asList(8,9,6,5,4,7,2,3,1);
-        //Collections.shuffle(initConf);
         controller.setConfiguration(initConf);
 
     }
@@ -281,12 +282,11 @@ public class EightBoard extends javax.swing.JFrame {
     }//GEN-LAST:event_tile9ActionPerformed
 
     private void flipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_flipActionPerformed
-        // TODO add your handling code here:+
+        this.flip.update(tile1, tile2);
         
     }//GEN-LAST:event_flipActionPerformed
 
     private void restartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restartActionPerformed
-        // TODO add your handling code here:
         this.restart.permute();
     }//GEN-LAST:event_restartActionPerformed
 

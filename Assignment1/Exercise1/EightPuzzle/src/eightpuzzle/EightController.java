@@ -18,7 +18,7 @@ import java.util.List;
  *
  * @author diego
  */
-public class EightController extends JLabel implements VetoableChangeListener, RestartListener {
+public class EightController extends JLabel implements VetoableChangeListener, RestartListener, FlipListener {
     
     private List<Integer> configuration;
 
@@ -76,9 +76,29 @@ public class EightController extends JLabel implements VetoableChangeListener, R
     }
 
     @Override
-    public void onRestartListener(RestartEvent evt) {
+    public void onRestart(RestartEvent evt) {
         List<Integer> permutation = evt.permutation;
         this.setConfiguration(permutation);
+    }
+
+    @Override
+    public void onFlip(FlipEvent evt) throws FlipForbiddenException {
+        
+        int first = evt.getFirstPos()-1;
+        int second = evt.getSecondPos()-1;
+        
+        
+        int ninePos = this.configuration.get(8);
+        
+        if (ninePos != 9) {
+            throw new FlipForbiddenException("Cannot flip");
+        }
+        
+        int label1 = this.configuration.get(first);
+        int label2 = this.configuration.get(second);
+        
+        this.configuration.set(first, label2);
+        this.configuration.set(second, label1);
     }
     
     

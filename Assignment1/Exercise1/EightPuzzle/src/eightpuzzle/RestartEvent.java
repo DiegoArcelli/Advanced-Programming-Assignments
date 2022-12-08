@@ -30,7 +30,7 @@ public class RestartEvent {
     public void update() {
         Collections.shuffle(permutation);
         for (RestartListener listener : listeners) {
-            listener.onRestartListener(this);
+            listener.onRestart(this);
         }
     }
     

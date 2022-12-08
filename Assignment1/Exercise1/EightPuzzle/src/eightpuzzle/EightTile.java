@@ -63,7 +63,7 @@ public class EightTile extends JButton implements Serializable, PropertyChangeLi
         }
     }
     
-    public int getLable() {
+    public int getTileLabel() {
         return label;
     }
     
@@ -78,6 +78,11 @@ public class EightTile extends JButton implements Serializable, PropertyChangeLi
             this.setBackground(Color.GRAY);
             this.setText("");
         }
+    }
+    
+    public void flip(int newLabel) {
+        this.label = newLabel;
+        setColor();
     }
     
     public void addVetoableChangeListener(VetoableChangeListener l) {
@@ -108,7 +113,7 @@ public class EightTile extends JButton implements Serializable, PropertyChangeLi
     }
 
     @Override
-    public void onRestartListener(RestartEvent evt) {
+    public void onRestart(RestartEvent evt) {
         List<Integer> perm = evt.permutation;
         int newLabel = perm.get(position-1);
         this.label = newLabel;
