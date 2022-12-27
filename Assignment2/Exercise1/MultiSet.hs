@@ -39,7 +39,6 @@ isin :: Eq a => (a, Int) -> MSet a -> Bool
 isin (v, n) (MS (x:xs)) = if ((v,n) == x)
     then True
     else isin (v, n) (MS xs)
-
 isin (v, n) (MS []) = False
 
 
@@ -62,16 +61,15 @@ union (MS (x:xs)) mset2 = union (MS xs) (addMult mset2 x)
 union (MS []) mset2 = mset2
 
 
--- instance Eq (MSet a) where
---     (==) (MS []) (MS []) = True
---     (==) (MS (x:xs)) (MS (y:ys)) = (x == y) && (xs == ys)
---     (==) _ _ = False
+instance Foldable MSet where
+    foldr f acc (MS []) = acc
+    foldr f acc (MS (x:xs)) = foldr f (f (fst x) acc) (MS xs)
 
--- instance Foldable MSet a where
---     foldr :: (b -> a -> b) -> b -> MSet a
---     foldr f acc (MS []) = acc
---     foldr f acc (MS (x:xs)) = foldr f (f acc x) xs
 
+instance Eq a => Eq (MSet a) where
+    (==) (MS []) (MS []) = True
+    (==) (MS (x:xs)) (MS (y:ys)) = (x == y) && (xs == ys)
+    (==) _ _ = False
 
 mapMSet :: (a -> b) -> MSet a -> MSet b
 mapMSet f (MS (x:xs)) = MS ( [ (f (fst x), snd x)] ++ (getlist (mapMSet f (MS xs))) )
