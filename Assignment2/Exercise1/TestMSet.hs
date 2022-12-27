@@ -1,4 +1,8 @@
 import MultiSet
 
 
-readMSet :: [Char] -> MSet a
+-- readMSet :: [Char] -> MSet a
+
+
+main :: IO()
+main = print "test"
