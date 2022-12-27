@@ -5,13 +5,14 @@ module MultiSet(
     elems,
     subeq,
     union,
-    mapMSet
+    mapMSet,
+    mapMSetRec
 ) where
 
 
 data MSet a = MS [(a, Int)] deriving (Show)
--- mset1 = MS [(1, 10), (2, 15), (3, 7), (4, 3)]
--- mset2 = MS [(1, 10), (2, 15), (3, 7), (4, 5), (10, 7)]
+mset1 = MS [(1, 10), (2, 15), (3, 7), (4, 3)]
+mset2 = MS [(1, 10), (2, 15), (3, 7), (4, 5), (10, 7)]
 
 
 getlist :: MSet a -> [(a, Int)]
@@ -63,7 +64,7 @@ union (MS []) mset2 = mset2
 
 instance Foldable MSet where
     foldr f acc (MS []) = acc
-    foldr f acc (MS (x:xs)) = foldr f (f (fst x) acc) (MS xs)
+    foldr f acc (MS (x:xs)) = f (fst x) (foldr f acc (MS xs))
 
 
 instance Eq a => Eq (MSet a) where
@@ -71,6 +72,10 @@ instance Eq a => Eq (MSet a) where
     (==) (MS (x:xs)) (MS (y:ys)) = (x == y) && (xs == ys)
     (==) _ _ = False
 
-mapMSet :: (a -> b) -> MSet a -> MSet b
-mapMSet f (MS (x:xs)) = MS ( [ (f (fst x), snd x)] ++ (getlist (mapMSet f (MS xs))) )
-mapMSet f (MS []) = MS []
+
+mapMSetRec :: (a -> b) -> MSet a -> MSet b
+mapMSetRec f (MS (x:xs)) = MS ( [ (f (fst x), snd x)] ++ (getlist (mapMSetRec f (MS xs))) )
+mapMSetRec f (MS []) = MS []
+
+mapMSet :: Eq b => (a -> b) -> MSet a -> MSet b
+mapMSet f (MS x) = union (mapMSetRec f (MS x)) (MS [])
