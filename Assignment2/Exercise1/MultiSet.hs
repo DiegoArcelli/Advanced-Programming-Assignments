@@ -14,7 +14,7 @@ data MSet a = MS [(a, Int)] deriving (Show)
 -- mset2 = MS [(1, 10), (2, 15), (3, 7), (4, 5), (10, 7)]
 
 
-getlist :: MSet a -> a
+getlist :: MSet a -> [(a, Int)]
 getlist (MS x) = x
 
 add :: Eq a => MSet a -> a -> MSet a
@@ -35,7 +35,7 @@ elems (MS []) = []
 
 
 
-isin :: (a, Int) -> MSet a -> Bool
+isin :: Eq a => (a, Int) -> MSet a -> Bool
 isin (v, n) (MS (x:xs)) = if ((v,n) == x)
     then True
     else isin (v, n) (MS xs)
@@ -43,7 +43,7 @@ isin (v, n) (MS (x:xs)) = if ((v,n) == x)
 isin (v, n) (MS []) = False
 
 
-subeq :: MSet a -> MSet a -> Bool
+subeq :: Eq a => MSet a -> MSet a -> Bool
 subeq (MS (x:xs)) mset2 = if (isin x mset2)
     then subeq (MS xs) mset2
     else False
@@ -62,10 +62,10 @@ union (MS (x:xs)) mset2 = union (MS xs) (addMult mset2 x)
 union (MS []) mset2 = mset2
 
 
-instance Eq (MSet a) where
-    (==) (MS []) (MS []) = True
-    (==) (MS (x:xs)) (MS (y:ys)) = (x == y) && (xs == ys)
-    (==) _ _ = False
+-- instance Eq (MSet a) where
+--     (==) (MS []) (MS []) = True
+--     (==) (MS (x:xs)) (MS (y:ys)) = (x == y) && (xs == ys)
+--     (==) _ _ = False
 
 -- instance Foldable MSet a where
 --     foldr :: (b -> a -> b) -> b -> MSet a
