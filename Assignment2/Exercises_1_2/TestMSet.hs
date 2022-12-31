@@ -22,7 +22,19 @@ gettext words = foldr (\(val, mult) text ->  text ++ (getline val mult) ) "" wor
 writeMSet :: MSet [Char] -> [Char] -> IO ()
 writeMSet (MS x) filename = writeFile filename (gettext x)
 
+readfiles :: MSet [Char] -> MSet [Char] -> MSet [Char] -> MSet [Char] -> IO ()
+readfiles m1 m2 m3 m4 = if ( m1 /= m4 && (elems m1) == (elems m4) )
+  then if ( m1 == (MultiSet.union m2 m3) )
+    then do
+      writeMSet m1 "anag-out.txt"
+      writeMSet m4 "gana-out.txt"
+      return ()
+    else return ()
+  else
+    return ()
+
 
 main :: IO()
 main = do
-  writeMSet (readMSet "margana2.txt") "prova.txt"
+  readfiles (readMSet "./aux_files/anagram.txt") (readMSet "./aux_files/anagram-s1.txt") (readMSet "./aux_files/anagram-s2.txt") (readMSet "./aux_files/margana2.txt")
+  return ()
