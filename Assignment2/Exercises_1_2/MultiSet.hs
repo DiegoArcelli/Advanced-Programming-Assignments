@@ -72,9 +72,7 @@ instance Foldable MSet where
 
 
 instance Eq a => Eq (MSet a) where
-    (==) (MS []) (MS []) = True
-    (==) (MS (x:xs)) (MS (y:ys)) = (x == y) && (xs == ys)
-    (==) _ _ = False
+    (==) mset1 mset2 = (subeq mset1 mset2) && (subeq mset2 mset1)
 
 
 mapMSetRec :: (a -> b) -> MSet a -> MSet b
