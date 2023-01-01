@@ -19,13 +19,13 @@ data MSet a = MS [(a, Int)] deriving (Show)
 -- mset2 = MS [(1, 10), (2, 15), (3, 7), (4, 5), (10, 7)]
 
 
-getlist :: MSet a -> [(a, Int)]
-getlist (MS x) = x
+getList :: MSet a -> [(a, Int)]
+getList (MS x) = x
 
 add :: Eq a => MSet a -> a -> MSet a
 add (MS (x:xs)) v = if (v == fst x)
     then MS ( [(fst x, snd x + 1)] ++ xs )
-    else MS ( [(fst x, snd x)] ++ (getlist (add (MS xs) v)))
+    else MS ( [(fst x, snd x)] ++ (getList (add (MS xs) v)))
 add (MS []) v = MS [(v, 1)]
 
 
@@ -40,15 +40,15 @@ elems (MS []) = []
 
 
 
-isin :: Eq a => (a, Int) -> MSet a -> Bool
-isin (v, n) (MS (x:xs)) = if ((v,n) == x)
+isIn :: Eq a => (a, Int) -> MSet a -> Bool
+isIn (v, n) (MS (x:xs)) = if ((v,n) == x)
     then True
-    else isin (v, n) (MS xs)
-isin (v, n) (MS []) = False
+    else isIn (v, n) (MS xs)
+isIn (v, n) (MS []) = False
 
 
 subeq :: Eq a => MSet a -> MSet a -> Bool
-subeq (MS (x:xs)) mset2 = if (isin x mset2)
+subeq (MS (x:xs)) mset2 = if (isIn x mset2)
     then subeq (MS xs) mset2
     else False
 subeq (MS []) mset2 = True
@@ -57,7 +57,7 @@ subeq (MS []) mset2 = True
 addMult :: Eq a => MSet a -> (a, Int) -> MSet a
 addMult (MS (x:xs)) (v, n) = if (v == fst x)
     then MS ( [(fst x, snd x + n)] ++ xs )
-    else MS ( [(fst x, snd x)] ++ (getlist (addMult (MS xs) (v, n))))
+    else MS ( [(fst x, snd x)] ++ (getList (addMult (MS xs) (v, n))))
 addMult (MS []) (v, n) = MS [(v, n)]
 
 
@@ -78,7 +78,7 @@ instance Eq a => Eq (MSet a) where
 
 
 mapMSetRec :: (a -> b) -> MSet a -> MSet b
-mapMSetRec f (MS (x:xs)) = MS ( [ (f (fst x), snd x)] ++ (getlist (mapMSetRec f (MS xs))) )
+mapMSetRec f (MS (x:xs)) = MS ( [ (f (fst x), snd x)] ++ (getList (mapMSetRec f (MS xs))) )
 mapMSetRec f (MS []) = MS []
 
 mapMSet :: Eq b => (a -> b) -> MSet a -> MSet b
