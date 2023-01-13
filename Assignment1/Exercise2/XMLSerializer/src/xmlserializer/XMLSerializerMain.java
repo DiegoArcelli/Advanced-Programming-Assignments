@@ -16,9 +16,16 @@ public class XMLSerializerMain {
     public static void main(String[] args) {
         // TODO code application logic here
         
-        Object[] arr = new Object[1];
+        Object[] arr = new Object[5];
         arr[0] = new Student("Marco", "Polo", 23);
-        XMLSerializer.serialize(arr, "prova");
+        arr[1] = new Student("Mario", "Rossi", 21);
+        arr[2] = new Empty();
+        arr[3] = new Student("Gianfranco", "Fini", 17);
+        arr[4] = new Empty();
+
+        
+        XMLSerializer xml_ser = new XMLSerializer();
+        xml_ser.serialize(arr, "prova");
         
         
     }
