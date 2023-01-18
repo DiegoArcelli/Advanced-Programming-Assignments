@@ -22,7 +22,7 @@ public class JobSchedulerFramework {
     public static void main(String[] args) {
         
         AnagramsCounterJobScheduler job = new AnagramsCounterJobScheduler();
-        job.main();
+        job.schedule();
 
     }
     

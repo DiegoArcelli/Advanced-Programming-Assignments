@@ -11,6 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,11 +28,11 @@ public class AnagramsCounterJobScheduler extends JobSchedulerTemplate<String, St
         
         
         String path = null;
-        List<AJob<String, String>> jobs = new ArrayList();
+        Stream<AJob<String, String>> jobs = null;
         
         try {
             
-            System.out.print("Insert directory path: ");
+            System.out.print("Insert directory path (es. Books): ");
             BufferedReader br= new BufferedReader(new InputStreamReader(System.in));
             path = br.readLine();
             
@@ -39,18 +40,27 @@ public class AnagramsCounterJobScheduler extends JobSchedulerTemplate<String, St
                 path = path + "/";
             }
             
+            // needed since path is not effectively final
+            String finalPath = path;
+            
             File files = new File(path);
-            for (String fileName : files.list()) {
-                if (fileName.endsWith(".txt")) {
-                    jobs.add(new AnagramJob(path + fileName));
-                }
-            }
+            
+            Stream<String> files_stream = Arrays.stream(files.list());
+            
+            /*
+            Stream to read all the file in the passed directory, filter those that end with .txt
+            and create an AnagramJob for each file
+            */
+            jobs = files_stream.filter(fileName -> fileName.endsWith(".txt"))
+                        .map(fileName -> new AnagramJob(finalPath + fileName));
+            
             
         } catch (IOException ex) {
             Logger.getLogger(AnagramsCounterJobScheduler.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        return jobs.stream();
+        
+        return jobs;
         
     }
 
@@ -67,15 +77,17 @@ public class AnagramsCounterJobScheduler extends JobSchedulerTemplate<String, St
             fw = new FileWriter(f.getAbsoluteFile());
             BufferedWriter bw = new BufferedWriter(fw);
             
+            // create a stream of pairs where each string contains the lenght of its list
             Stream<Pair<String, Integer>> counts = outputs.map(pair -> new Pair(pair.getKey(), pair.getValue().size()));
-            counts.forEach(pair -> {
-                try {
-                    bw.write("<" + pair.getKey() + "> - <" + pair.getValue() + ">\n");
-                } catch (IOException ex) {
-                    Logger.getLogger(AnagramsCounterJobScheduler.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            });
             
+            // use mutable reduction to concatenate all 
+            StringBuilder builder = counts.collect(
+                    StringBuilder::new,
+                    (col, pair) -> col.append(String.format("<%s> - <%d>\n", pair.getKey(), pair.getValue())),
+                    (col1, col2) -> col1.append(col2)
+            );
+            
+            bw.write(builder.toString());
             bw.close();
         } catch (IOException ex) {
             Logger.getLogger(AnagramsCounterJobScheduler.class.getName()).log(Level.SEVERE, null, ex);

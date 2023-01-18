@@ -18,7 +18,7 @@ import java.util.stream.Stream;
  *
  * @author diego
  */
-public class AnagramJob extends AJob {
+public class AnagramJob extends AJob<String, String> {
     
     private String path;
     
@@ -26,6 +26,8 @@ public class AnagramJob extends AJob {
         this.path = path;
     }
     
+    
+    // function that compute the CIAO of a string passed as argument
     private String getCiao(String text) {
         char[] chars = text.toCharArray();
         Arrays.sort(chars);
@@ -33,7 +35,7 @@ public class AnagramJob extends AJob {
     }
 
     @Override
-    public Stream execute() {
+    public Stream<Pair<String, String>> execute() {
                 
         Stream<Pair<String, String>> lines = null;
         

@@ -15,7 +15,8 @@ import java.util.stream.Stream;
  */
 abstract public class JobSchedulerTemplate <K, V> {
     
-    public void main() {
+    // template method
+    public void schedule() {
         Stream<AJob<K,V>> jobs = emit();
         Stream<Pair<K,V>> outputs_list = compute(jobs);
         Stream<Pair<K,List<V>>> outputs = collect(outputs_list);
@@ -23,14 +24,33 @@ abstract public class JobSchedulerTemplate <K, V> {
     }
     
     
+    // hot spot method which must be redefined by subclasses
     protected abstract Stream<AJob<K,V>> emit();
     
+    
+    // frozen spot method
     private Stream<Pair<K,V>> compute(Stream<AJob<K,V>> jobs) {
-        Stream<Pair<K,V>> outputs = jobs.map(job -> job.execute()).flatMap(x -> x);
+        
+        /* 
+        For each object of type AJob<K,V> in the stream the execute method is called, returing
+        a stream of Pair<K, V>.
+        
+        flatMap is used since normal map would have returned an
+        object of type Stream<Stream<Pair<K, V>>>
+        */
+        
+        Stream<Pair<K,V>> outputs = jobs.flatMap(job -> job.execute());
         return outputs;
     }
     
+    
+    // frozen spot method
     private Stream<Pair<K,List<V>>> collect(Stream<Pair<K,V>> outputs) {
+        
+        /* 
+        From the stream of type Stream<Pair<K,V>> we create a map that associate
+        each unique key in the stream the list of values corresponding to that key
+        */
         
         Map<K, List<V>> map = outputs.collect(
                 Collectors.groupingBy(Pair<K, V>::getKey,
@@ -38,9 +58,13 @@ abstract public class JobSchedulerTemplate <K, V> {
                         )
         );
         
+        /*
+        The object of type Map<K, List<V>> is tansformed into an object of type Stream<Pair<K,List<V>>>
+        */
         return map.entrySet().stream().map(entry -> new Pair(entry.getKey(), entry.getValue()));
     }
     
+    // hot spot method which must be redefined by subclasses
     protected abstract void output(Stream<Pair<K,List<V>>>  outputs);
         
     
