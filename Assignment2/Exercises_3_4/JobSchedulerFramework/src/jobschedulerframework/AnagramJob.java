@@ -45,10 +45,29 @@ public class AnagramJob extends AJob<String, String> {
             
             lines = files.map(line -> line.split(" "))
                     .flatMap(words -> Arrays.stream(words))
+                    // remove punctuation and other special characters
+                    .map(word -> word.replace(",", ""))
+                    .map(word -> word.replace(".", ""))
+                    .map(word -> word.replace(";", ""))
+                    .map(word -> word.replace("-", ""))
+                    .map(word -> word.replace(":", ""))
+                    .map(word -> word.replace("?", ""))
+                    .map(word -> word.replace("!", ""))
+                    .map(word -> word.replace("\"", ""))
+                    .map(word -> word.replace("'", ""))
+                    .map(word -> word.replace("/", ""))
+                    .map(word -> word.replace("(", ""))
+                    .map(word -> word.replace(")", ""))
+                    //.map(word -> word.replaceAll(pattern, ""))
+                    // remove empty words
                     .filter(word -> !word.equals(" ") && !word.equals(""))
+                    // remove words that do not contain alphabetical characters
                     .filter(word -> word.matches("[a-zA-Z]+"))
+                    // remove words with less then 4 characters
                     .filter(word -> word.length() >= 4)
+                    // convert the words to lowercase
                     .map(word -> word.toLowerCase())
+                    // create the pairs (ciao(word), word)
                     .map(word -> new Pair<String, String>(getCiao(word), word));
                         
         } catch (IOException ex) {
