@@ -16,6 +16,7 @@ import javax.swing.JButton;
 import java.beans.VetoableChangeSupport;
 import java.io.Serializable;
 import java.util.List;
+import javax.swing.Timer;
 
 /**
  *
@@ -40,7 +41,7 @@ public class EightTile extends JButton implements Serializable, PropertyChangeLi
         this.position = position;
         this.label = label;
         super.setText(Integer.toString(label));
-        setColor();
+        setColor(determineColor());
         // System.out.println(changes);
         // this.setLabel(label);
         //
@@ -52,14 +53,17 @@ public class EightTile extends JButton implements Serializable, PropertyChangeLi
 
     public void setLabel(int newLabel) {
         int oldLabel = label;
+        System.out.println(oldLabel);
+        System.out.println(newLabel);
         try {
             vetos.fireVetoableChange("label", oldLabel, newLabel);
             label = newLabel;
             this.setText(Integer.toString(label));
-            setColor();
+            setColor(determineColor());
             changes.firePropertyChange("label", oldLabel, newLabel);
         } catch (Exception e) {
             System.out.println("Cannot change " + oldLabel + " in " + newLabel);
+            flash();
         }
     }
     
@@ -67,23 +71,41 @@ public class EightTile extends JButton implements Serializable, PropertyChangeLi
         return label;
     }
     
-    private void setColor() {
+    private void setColor(Color c) {
+        this.setBackground(c);
+        this.setText(label != 9 ? Integer.toString(label) : "");
+    }
+    
+    
+    public Color determineColor() {
         if (label == position && label != 9) {
-            this.setBackground(Color.GREEN);
-            this.setText(Integer.toString(label));
+            return Color.GREEN;
         } else if (label != 9) {
-            this.setBackground(Color.YELLOW);
-            this.setText(Integer.toString(label));
+            return Color.YELLOW;
         } else {
-            this.setBackground(Color.GRAY);
-            this.setText("");
+            return Color.GRAY;
         }
     }
     
     public void flip(int newLabel) {
         this.label = newLabel;
-        setColor();
+        setColor(determineColor());
     }
+    
+    
+        // function to execute the flash effect if the change of label is vetoed
+    public void flash() {
+        this.setColor(Color.RED);
+        Timer timer = new Timer(500, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setColor(determineColor());
+            }
+        });
+        timer.setRepeats(false);
+        timer.start();
+    }
+    
     
     public void addVetoableChangeListener(VetoableChangeListener l) {
         this.vetos.addVetoableChangeListener(l);
@@ -107,7 +129,7 @@ public class EightTile extends JButton implements Serializable, PropertyChangeLi
                 
         if (label == 9) {
             this.label = oldValue;
-            setColor();
+            setColor(determineColor());
             //this.setLabel(oldValue);
         }
     }
@@ -117,8 +139,7 @@ public class EightTile extends JButton implements Serializable, PropertyChangeLi
         List<Integer> perm = evt.permutation;
         int newLabel = perm.get(position-1);
         this.label = newLabel;
-        setColor();
-        
+        setColor(determineColor());
     }
     
     

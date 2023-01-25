@@ -289,7 +289,8 @@ public class EightBoard extends javax.swing.JFrame {
     private void restartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restartActionPerformed
         this.restart.permute();
     }//GEN-LAST:event_restartActionPerformed
-
+    
+    
     /**
      * @param args the command line arguments
      */
