@@ -23,7 +23,11 @@ public class EightBoard extends javax.swing.JFrame {
     public EightBoard() {
         initComponents();
                 
-        // the controllers registers as vetoable listener of all the tiles
+        /*
+        The Controller registers as vetoable listener of all the tiles, so that 
+        it can veto modification of the Label property of the tiles
+        */
+        
         this.tile1.addVetoableChangeListener(controller);
         this.tile2.addVetoableChangeListener(controller);
         this.tile3.addVetoableChangeListener(controller);
@@ -35,42 +39,51 @@ public class EightBoard extends javax.swing.JFrame {
         this.tile9.addVetoableChangeListener(controller);
         
         
-        // every tile registers as listeners of the tiles on which it could
-        // move if that tiles have lable == 9
-        this.tile1.addPropertyChangeListenerz(tile2);
-        this.tile1.addPropertyChangeListenerz(tile4);
+        /*
+        Every tile registers as property change listener of its adjacent tiles,
+        so that if the label property of one of the adjacent tile is changed,
+        then the tile can adjust its label accordingly
+        */
+        this.tile1.addPropertyChangeListeners(tile2);
+        this.tile1.addPropertyChangeListeners(tile4);
         
-        this.tile2.addPropertyChangeListenerz(tile1);
-        this.tile2.addPropertyChangeListenerz(tile3);
-        this.tile2.addPropertyChangeListenerz(tile5);
+        this.tile2.addPropertyChangeListeners(tile1);
+        this.tile2.addPropertyChangeListeners(tile3);
+        this.tile2.addPropertyChangeListeners(tile5);
         
-        this.tile3.addPropertyChangeListenerz(tile2);
-        this.tile3.addPropertyChangeListenerz(tile6);
+        this.tile3.addPropertyChangeListeners(tile2);
+        this.tile3.addPropertyChangeListeners(tile6);
         
-        this.tile4.addPropertyChangeListenerz(tile1);
-        this.tile4.addPropertyChangeListenerz(tile5);
-        this.tile4.addPropertyChangeListenerz(tile7);
+        this.tile4.addPropertyChangeListeners(tile1);
+        this.tile4.addPropertyChangeListeners(tile5);
+        this.tile4.addPropertyChangeListeners(tile7);
         
-        this.tile5.addPropertyChangeListenerz(tile2);
-        this.tile5.addPropertyChangeListenerz(tile4);
-        this.tile5.addPropertyChangeListenerz(tile6);
-        this.tile5.addPropertyChangeListenerz(tile8);
+        this.tile5.addPropertyChangeListeners(tile2);
+        this.tile5.addPropertyChangeListeners(tile4);
+        this.tile5.addPropertyChangeListeners(tile6);
+        this.tile5.addPropertyChangeListeners(tile8);
         
-        this.tile6.addPropertyChangeListenerz(tile3);
-        this.tile6.addPropertyChangeListenerz(tile5);
-        this.tile6.addPropertyChangeListenerz(tile9);
+        this.tile6.addPropertyChangeListeners(tile3);
+        this.tile6.addPropertyChangeListeners(tile5);
+        this.tile6.addPropertyChangeListeners(tile9);
         
-        this.tile7.addPropertyChangeListenerz(tile4);
-        this.tile7.addPropertyChangeListenerz(tile8);
+        this.tile7.addPropertyChangeListeners(tile4);
+        this.tile7.addPropertyChangeListeners(tile8);
         
-        this.tile8.addPropertyChangeListenerz(tile7);
-        this.tile8.addPropertyChangeListenerz(tile5);
-        this.tile8.addPropertyChangeListenerz(tile9);
+        this.tile8.addPropertyChangeListeners(tile7);
+        this.tile8.addPropertyChangeListeners(tile5);
+        this.tile8.addPropertyChangeListeners(tile9);
+       
+        this.tile9.addPropertyChangeListeners(tile6);
+        this.tile9.addPropertyChangeListeners(tile8);
         
-        this.tile9.addPropertyChangeListenerz(tile6);
-        this.tile9.addPropertyChangeListenerz(tile8);
         
-        
+        /*
+        All the tiles and the Controller register as listeners of the restert event
+        which can be fired by the restart button, so that the tiles can set their 
+        label after the restart and the controller can update its internal state
+        of the board
+        */
         this.restart.addRestartListener(controller);
         this.restart.addRestartListener(tile1);
         this.restart.addRestartListener(tile2);
@@ -82,19 +95,20 @@ public class EightBoard extends javax.swing.JFrame {
         this.restart.addRestartListener(tile8);
         this.restart.addRestartListener(tile9);
         
+        
+        /*
+        The controller registers as listener of the flip event so that if it is
+        modified it can handle 
+        */
         this.flip.addFlipListener(controller);
         
         
+        // set up an initial configurationof the board
         List<Integer> initConf = Arrays.asList(8,9,6,5,4,7,2,3,1);
         controller.setConfiguration(initConf);
 
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -245,6 +259,11 @@ public class EightBoard extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    /*
+    Whenever one of the tiles is clicked the Board tries to change its label to 9
+    (the label of the empty tile) and the change has to be approved by the Controller
+    */
     private void tile1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tile1ActionPerformed
         tile1.setLabel(9);
     }//GEN-LAST:event_tile1ActionPerformed
@@ -281,11 +300,13 @@ public class EightBoard extends javax.swing.JFrame {
         tile9.setLabel(9);
     }//GEN-LAST:event_tile9ActionPerformed
 
+    // when the flip button is pressed
     private void flipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_flipActionPerformed
         this.flip.update(tile1, tile2);
         
     }//GEN-LAST:event_flipActionPerformed
 
+    // when the restart button is pressed the restart event is fired
     private void restartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_restartActionPerformed
         this.restart.permute();
     }//GEN-LAST:event_restartActionPerformed

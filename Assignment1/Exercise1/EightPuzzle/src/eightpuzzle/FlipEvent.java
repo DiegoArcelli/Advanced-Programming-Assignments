@@ -13,42 +13,32 @@ import java.util.List;
  *
  * @author diego
  */
+
+/*
+Function which represent the flip event, which is fired to invert the positon
+of the tiles in position firstPos and secondPos
+*/
 public class FlipEvent {
     
+    // list of all the listeners of the event
     private List<FlipListener> listeners;
-    private int firstPos;
-    private int secondPos;
-
+    
+    
     public FlipEvent() {
         listeners = new ArrayList<FlipListener>();
-        firstPos = 1;
-        secondPos = 2;
     }
     
-    public FlipEvent(int first, int second) {
-        listeners = new ArrayList<FlipListener>();
-        this.firstPos = first;
-        this.secondPos = second;
-    }
     
+    // method to register new listeners
     public void addFlipListener(FlipListener l) {
         this.listeners.add(l);
     }
     
-    
+    // method to fire the event calling the onFlip method of each listener
     public void update() throws FlipForbiddenException {
         for (FlipListener listener : listeners) {
             listener.onFlip(this);
         }
     }
-
-    public int getFirstPos() {
-        return firstPos;
-    }
-
-    public int getSecondPos() {
-        return secondPos;
-    }
-    
     
 }

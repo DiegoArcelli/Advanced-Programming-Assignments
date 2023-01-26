@@ -8,6 +8,11 @@ package eightpuzzle;
  *
  * @author diego
  */
+
+/*
+Exeception which is thown if the flip operation is forbidden
+beacause the hole is not in position 9
+*/
 public class FlipForbiddenException extends Exception {
     
     public FlipForbiddenException(String errorMessage) {

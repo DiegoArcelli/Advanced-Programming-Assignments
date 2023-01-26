@@ -8,8 +8,16 @@ package eightpuzzle;
  *
  * @author diego
  */
+
+/*
+Interface to implement if an object wants to register as a listener of the restart event
+*/
 public interface RestartListener {
     
-    public void onRestart(RestartEvent evt);
+    /*
+    Abstract method that the listeners have to implement to set their behavior
+    after the restart event is fired
+    */
+    public abstract void onRestart(RestartEvent evt);
     
 }

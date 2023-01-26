@@ -8,8 +8,18 @@ package eightpuzzle;
  *
  * @author diego
  */
+
+
+/*
+Interface to implement if an object wants to register as a listener of the flip event
+*/
 public interface FlipListener {
     
-    public void onFlip(FlipEvent evt) throws FlipForbiddenException;
+    
+    /*
+    Abstract method that the listeners have to implement to set their behavior
+    after the flip event is fired
+    */
+    public abstract void onFlip(FlipEvent evt) throws FlipForbiddenException;
     
 }

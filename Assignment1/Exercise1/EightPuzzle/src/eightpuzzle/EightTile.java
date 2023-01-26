@@ -24,7 +24,10 @@ import javax.swing.Timer;
  */
 public class EightTile extends JButton implements Serializable, PropertyChangeListener, RestartListener {
     
-    private final int position;
+    // position of the tile in the board
+    private final int position; 
+    
+    // number of the tile in the board
     private int label;
     private VetoableChangeSupport vetos; 
     private PropertyChangeSupport changes;
@@ -42,19 +45,18 @@ public class EightTile extends JButton implements Serializable, PropertyChangeLi
         this.label = label;
         super.setText(Integer.toString(label));
         setColor(determineColor());
-        // System.out.println(changes);
-        // this.setLabel(label);
-        //
     }
     
     public EightTile(int position) {
         this.position = position;
     }
 
+    
+    
     public void setLabel(int newLabel) {
         int oldLabel = label;
-        System.out.println(oldLabel);
-        System.out.println(newLabel);
+
+        /* Tries to change the value of the label  */
         try {
             vetos.fireVetoableChange("label", oldLabel, newLabel);
             label = newLabel;
@@ -67,25 +69,36 @@ public class EightTile extends JButton implements Serializable, PropertyChangeLi
         }
     }
     
+    
     public int getTileLabel() {
         return label;
     }
     
+    // function to set the background propery of the tile
     private void setColor(Color c) {
         this.setBackground(c);
+        // the text of the tile is changed according to the value of the label
         this.setText(label != 9 ? Integer.toString(label) : "");
     }
     
     
+    // function used to deterine the color of the tile based on the value of label
     public Color determineColor() {
+        
+        // if the label is in its position and it is not the hole then it is green
         if (label == position && label != 9) {
             return Color.GREEN;
+            
+        // if the tile is not in its positiona nd it is no the hole then it is yellow
         } else if (label != 9) {
             return Color.YELLOW;
+            
+        // if the tile is the hole then it is gray
         } else {
             return Color.GRAY;
         }
     }
+    
     
     public void flip(int newLabel) {
         this.label = newLabel;
@@ -93,7 +106,7 @@ public class EightTile extends JButton implements Serializable, PropertyChangeLi
     }
     
     
-        // function to execute the flash effect if the change of label is vetoed
+    // function to execute the flash effect if the change of label is vetoed
     public void flash() {
         this.setColor(Color.RED);
         Timer timer = new Timer(500, new ActionListener() {
@@ -115,28 +128,43 @@ public class EightTile extends JButton implements Serializable, PropertyChangeLi
         this.vetos.removeVetoableChangeListener(l);
     }
     
-    public void addPropertyChangeListenerz(PropertyChangeListener l) {
+    public void addPropertyChangeListeners(PropertyChangeListener l) {
         this.changes.addPropertyChangeListener(l);
     }
     
-    public void removePropertyChangeListenerz(PropertyChangeListener l) {
+    public void removePropertyChangeListeners(PropertyChangeListener l) {
         this.changes.removePropertyChangeListener(l);
     }
 
+    
+    /*
+    Function which is executed when one of the tiles adjacent to the tile
+    change its label value
+    */
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         int oldValue = (int)evt.getOldValue();
                 
+        /*
+        If the tile is currently the hole, then it sets as value of its label 
+        property the the old value of the tile which has been moved.
+        If th tile is currently not the hold, the value of its label property
+        remains unchanged
+        */
         if (label == 9) {
             this.label = oldValue;
             setColor(determineColor());
-            //this.setLabel(oldValue);
         }
     }
 
+    
+    // Function which is executed when the restart button is pressed
     @Override
     public void onRestart(RestartEvent evt) {
+        // extract fromthe RestarEvent object the new configuraiton of the board
         List<Integer> perm = evt.permutation;
+        
+        // The tile extract its new value for the label property
         int newLabel = perm.get(position-1);
         this.label = newLabel;
         setColor(determineColor());

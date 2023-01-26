@@ -14,8 +14,17 @@ import javax.swing.SwingConstants;
  *
  * @author diego
  */
+
+/*
+Bean which represent the restart button
+*/
+
 public class Restart extends JButton implements Serializable {
     
+    /* 
+    object that represent the restart event which is used to maintain
+    the list of all the listeners of the event
+    */
     private RestartEvent event;
     
     public Restart() {
@@ -24,10 +33,14 @@ public class Restart extends JButton implements Serializable {
         this.setHorizontalAlignment(SwingConstants.CENTER);
     }
     
+    
+    // function to register a new event listener
     public void addRestartListener(RestartListener l) {
         this.event.addRestartListener(l);
     }
     
+    
+    // function to call in order to fire the restart event
     public void permute() {
         this.event.update();
     }
