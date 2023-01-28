@@ -4,11 +4,7 @@
  */
 package eightpuzzle;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -350,7 +346,6 @@ public class EightBoard extends javax.swing.JFrame {
         });
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
     private eightpuzzle.EightController controller;
     private eightpuzzle.Flip flip;
     private eightpuzzle.Restart restart;
@@ -363,6 +358,5 @@ public class EightBoard extends javax.swing.JFrame {
     private eightpuzzle.EightTile tile7;
     private eightpuzzle.EightTile tile8;
     private eightpuzzle.EightTile tile9;
-    // End of variables declaration//GEN-END:variables
 
 }

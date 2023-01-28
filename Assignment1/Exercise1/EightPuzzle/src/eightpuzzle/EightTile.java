@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 import javax.swing.JButton;
 import java.beans.VetoableChangeSupport;

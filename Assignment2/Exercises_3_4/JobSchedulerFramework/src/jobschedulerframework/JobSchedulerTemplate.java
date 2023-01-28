@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 abstract public class JobSchedulerTemplate <K, V> {
     
     // template method
-    public void schedule() {
+    public final void schedule() {
         Stream<AJob<K,V>> jobs = emit();
         Stream<Pair<K,V>> outputs_list = compute(jobs);
         Stream<Pair<K,List<V>>> outputs = collect(outputs_list);
